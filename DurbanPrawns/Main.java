@@ -12,59 +12,64 @@ public class Main{
          int x = 0;
          int y = 0;
          int z = 0;
+         int minix  = Integer.MAX_VALUE;
+         int miniy = Integer.MAX_VALUE;
+         int maxix = 0;
+         int maxiy  = 0;
          String[] linearr;
          for(int j = 0; j< roaches; j++){
             line  = k.nextLine();
             linearr = line.split(" "); 
-             x = Integer.parseInt(linearr[0]);
-             y =  Integer.parseInt(linearr[1]);
-             z =  Integer.parseInt(linearr[2]);
-              roach[x][y]  = z;  
+            x = Integer.parseInt(linearr[0]);
+            y =  Integer.parseInt(linearr[1]);
+            z =  Integer.parseInt(linearr[2]);
+            minix = Math.min(x, minix);
+            miniy = Math.min(y, miniy);
+            maxix = Math.max(x, minix);
+            maxiy = Math.max(y, maxiy);
+            roach[x][y]  = z; 
+            for(int n = 1; n<= strength; n++){
+               if( x+n<=1024){
+                  killed[x+n][y] += z;
+                  if(y-n>=0){
+                     killed[x+n][y-n] += z;
+                  }
+                  if(y+n<=1024){
+                     killed[x+n][y+n] += z;
+                  }
+               }
+                  
+               if(x-n>=0 ){
+                  killed[x-n][y] += z;
+                  if(y-n>=0){
+                     killed[x-n][y-n] += z;
+                  }
+                  if(y+n<=1024){
+                     killed[x-n][y+n] += z;
+                  }
+               }
+                  
+               if(y-n>=0){
+                  killed[x][y-n] += z;
+               }
+               if(y+n<=1024){
+                  killed[x][y+n] += z;
+               }
+                  
+                   
+            } 
             
              
          }
          
          
-         for(int j = 0; j< 1025; j++){
-            for(int m = 0; m< 1025; m++){
-               int temp = roach[j][m];
-               for(int n = 1; n<= strength; n++){
-                  if( j+n<=1024){
-                     killed[j+n][m] += temp;
-                     if(m-n>=0){
-                        killed[j+n][m-n] += temp;
-                     }
-                      if(m+n<=1024){
-                        killed[j+n][m+n] += temp;
-                     }
-                  }
-                  
-                  if(j-n>=0 ){
-                     killed[j-n][m] += temp;
-                       if(m-n>=0){
-                          killed[j-n][m-n] += temp;
-                     }
-                     if(m+n<=1024){
-                        killed[j-n][m+n] += temp;
-                     }
-                  }
-                  
-                  if(m-n>=0){
-                     killed[j][m-n] += temp;
-                  }
-                  if(m+n<=1024){
-                     killed[j][m+n] += temp;
-                  }
-                  
-                   
-               }
-            }
-         }
-         int max = 0;
-         int maxx = 0;
-         int maxy = 0;
-        for(int j = 0; j< 1025; j++){
-            for(int m = 0; m< 1025; m++){
+      
+         
+      int max = 0;
+      int maxx = 0;
+      int maxy = 0;
+      for(int j = Math.max(minix-strength,0); j<= Math.min(1024,maxix+strength); j++){
+         for(int m = Math.max(miniy-strength,0); m<=Math.min(1024, maxiy+strength); m++){
             if(killed[j][m]> max){
             
                max  = killed[j][m];
@@ -73,10 +78,10 @@ public class Main{
                
             }
          }
-         }
-         System.out.println(maxx + " "+ maxy + " "+ max);
-         
       }
-      
+      System.out.println(maxx + " "+ maxy + " "+ max);
+      }         
    }
+      
+   
 }
